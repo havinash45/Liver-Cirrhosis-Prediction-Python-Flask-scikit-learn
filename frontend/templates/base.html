@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Liver Cirrhosis Prediction{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+  <style>
+    /* Full-stack UI enhancements */
+    .wide { max-width: 950px !important; }
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tabs button { margin-top: 0; }
+    .tabs button.inactive { background-color: #64748b; }
+    .tabs button.inactive:hover { background-color: #475569; }
+    select, input[type="text"], input[type="number"] {
+      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 5px; font-size: 16px; box-sizing: border-box;
+    }
+    .hint { font-size: 13px; color: #64748b; }
+    .error { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; }
+    .badge { display: inline-block; padding: 6px 14px; border-radius: 20px; color: #fff; font-weight: bold; }
+    .badge-green { background: #16a34a; } .badge-amber { background: #d97706; }
+    .badge-orange { background: #ea580c; } .badge-red { background: #dc2626; }
+    .disclaimer { text-align: center; color: #64748b; padding: 15px 20px; font-size: 14px; }
+    table.metrics { width: 100%; border-collapse: collapse; color: #1e293b; margin: 15px 0; }
+    table.metrics th, table.metrics td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
+    table.metrics th { background: #dbeafe; }
+    .hero-btns a { display: inline-block; background: #2563eb; color: #fff; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 18px; margin: 8px; }
+    .hero-btns a:hover { background: #1d4ed8; }
+    .hero-wrap { background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%); min-height: 55vh; display: flex; align-items: center; justify-content: center; }
+    .hero-wrap .overlay-text { position: static; transform: none; color: #fff; }
+    .hero-wrap .overlay-text h1, .hero-wrap .overlay-text h2 { color: #fff; }
+    pre { white-space: pre-wrap; word-wrap: break-word; background: #f1f5f9; padding: 10px; border-radius: 5px; color: #1e293b; }
+
+    /* Database status pill in header */
+    .nav-container { display: flex; justify-content: space-between; align-items: center; }
+    .db-badge-wrap { display: inline-flex; align-items: center; margin-left: 15px; }
+    .db-pill {
+      font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .db-pill-mysql { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    .db-pill-sqlite { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .db-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .db-dot-green { background-color: #22c55e; }
+    .db-dot-amber { background-color: #f59e0b; }
+    .db-status-banner {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 10px 16px; margin-bottom: 20px; font-size: 14px; color: #334155;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+      <h2 style="margin: 0; padding: 10px 0;">Liver Cirrhosis Prediction System</h2>
+      <div class="db-badge-wrap">
+        {% if db_status and db_status.active_engine == 'mysql' %}
+          <span class="db-pill db-pill-mysql" title="Connected to MySQL ({{ db_status.mysql_database }})">
+            <span class="db-dot db-dot-green"></span> MySQL: {{ db_status.mysql_database }}
+          </span>
+        {% else %}
+          <span class="db-pill db-pill-sqlite" title="Using local SQLite storage (MySQL offline)">
+            <span class="db-dot db-dot-amber"></span> SQLite Fallback
+          </span>
+        {% endif %}
+      </div>
+    </div>
+    <nav>
+      <a href="{{ url_for('web.home') }}">Home</a>
+      <a href="{{ url_for('web.predict') }}">Check Liver Stage</a>
+      <a href="{{ url_for('web.risk_check') }}">Risk Check</a>
+      <a href="{{ url_for('web.models_page') }}">Models</a>
+      <a href="{{ url_for('web.history') }}">Database History</a>
+    </nav>
+  </div>
+  {% block content %}{% endblock %}
+  <p class="disclaimer">Clinical decision-support tool only — not a definitive diagnosis. Always consult a healthcare professional.</p>
+</body>
+</html>

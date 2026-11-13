@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Home — Liver Cirrhosis Prediction{% endblock %}
+{% block content %}
+<div class="image-container hero-wrap">
+  <div class="overlay-text">
+    <h1>Revolutionizing Liver Care</h1>
+    <h2>Predicting Liver Cirrhosis using Advanced Machine Learning</h2>
+    <p>Enter a patient's clinical details and get an instant, model-based
+       prediction of the liver disease stage (1–4), or run a quick
+       cirrhosis risk check from alcohol and blood-test history.</p>
+    <div class="hero-btns">
+      <a href="{{ url_for('web.predict') }}">Check Liver Stage</a>
+      <a href="{{ url_for('web.risk_check') }}">Risk Check</a>
+    </div>
+  </div>
+</div>
+<div class="container wide">
+  <h2>How it works</h2>
+  <ol>
+    <li><strong>Enter details</strong> — the 16 clinical values (drug, age,
+        blood tests) or the 16 risk-check values.</li>
+    <li><strong>Model prediction</strong> — a trained scikit-learn model
+        predicts the liver stage (1 = normal, 2 = fatty liver,
+        3 = fibrosis, 4 = cirrhosis) or a YES/no cirrhosis risk.</li>
+    <li><strong>Receive results</strong> — the result, the model's
+        confidence, and a downloadable/printable report.</li>
+  </ol>
+  <p>Built for doctors and healthcare professionals (see the Empathy Map
+     and Customer Journey Map in the original project). Every prediction is
+     logged and can be reviewed on the <a href="{{ url_for('web.history') }}">History</a> page.</p>
+  <p><strong>Models:</strong> five classifiers were trained and compared on
+     the Mayo Clinic PBC data (412 patients) and on the Kaggle Indian liver
+     dataset (896 patients). Real measured metrics are on the
+     <a href="{{ url_for('web.models_page') }}">Models</a> page — the
+     original report's performance table was blank, so no numbers here are
+     invented.</p>
+</div>
+{% endblock %}

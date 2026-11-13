@@ -1,13 +1,25 @@
-sklearn  
-numpy  
-pandas  
-seaborn   
-matplotlib   
-joblib  
-flask 
-gunicorn 
-scipy 
-imblearn
-xgboost 
-catboost  
-lightgbm
+# Liver Cirrhosis Prediction Full-Stack System - Unified Requirements
+# Install with: pip install -r requirements.txt
+
+# Web & API Framework
+Flask==3.1.3
+Werkzeug>=3.0.0
+Jinja2>=3.1.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# Machine Learning & Data Processing
+scikit-learn==1.9.1
+pandas>=2.0.0
+numpy>=1.26.0
+joblib>=1.3.0
+openpyxl>=3.1.0
+matplotlib>=3.8.0
+
+# Database Connectors (MySQL & SQLite)
+mysql-connector-python>=8.0.30
+PyMySQL>=1.1.0
+cryptography>=41.0.0
+
+# Testing
+pytest>=8.0.0

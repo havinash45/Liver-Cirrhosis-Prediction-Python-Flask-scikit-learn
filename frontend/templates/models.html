@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Models — Liver Cirrhosis Prediction{% endblock %}
+{% block content %}
+<div class="container wide">
+  <h2>Models &amp; Real Measured Metrics</h2>
+  {% if error %}<div class="error">{{ error }}</div>{% endif %}
+  {% if message %}<p style="color:#166534;font-weight:bold">{{ message }}</p>{% endif %}
+  <p>These numbers were measured by <code>ml/train.py</code> and
+     <code>ml/train_risk.py</code> on held-out test data. The original
+     report's §6.1 performance table was blank, so nothing here is copied
+     from it — and nothing is invented.</p>
+
+  <h3>Stage model — cirrhosis.csv (Mayo Clinic PBC, {{ stage_metrics.n_rows_used }} patients)</h3>
+  <p>Winner (best 5-fold CV F1-macro): <strong>{{ stage_metrics.winner }}</strong> ·
+     test set {{ stage_metrics.test_size }} rows, stratified 80/20, 5-fold CV.</p>
+  <table class="metrics">
+    <tr><th>Model</th><th>Accuracy</th><th>Precision (macro)</th><th>Recall (macro)</th><th>F1-macro</th><th>CV F1-macro</th></tr>
+    {% for name, m in stage_metrics.comparison.items() %}
+    <tr{% if name == stage_metrics.winner %} style="background:#dcfce7;font-weight:bold"{% endif %}>
+      <td>{{ name }}</td><td>{{ m.accuracy }}</td><td>{{ m.precision_macro }}</td>
+      <td>{{ m.recall_macro }}</td><td>{{ m.f1_macro }}</td><td>{{ m.cv_f1_macro_mean }} ± {{ m.cv_f1_macro_std }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p>Stage counts in training data: {{ stage_metrics.stage_counts }}</p>
+  <pre>{{ stage_metrics.classification_report }}</pre>
+  <p>Confusion matrix (rows = true, columns = predicted, stages 1–4):</p>
+  <pre>{{ stage_metrics.confusion_matrix }}</pre>
+  {% if stage_metrics.feature_importances %}
+  <p>Feature importances (winner):</p>
+  <pre>{% for k, v in stage_metrics.feature_importances.items() %}{{ k }}: {{ v }}
+{% endfor %}</pre>
+  {% endif %}
+
+  <h3>Risk model — HealthCareData.xlsx ({{ risk_metrics.n_rows_used }} patients)</h3>
+  <p><strong>Read this first:</strong> {{ risk_metrics.imbalance_warning }}</p>
+  <p>Winner (best 5-fold CV F1-macro): <strong>{{ risk_metrics.winner }}</strong> ·
+     test set {{ risk_metrics.test_size }} rows. Target counts:
+     {{ risk_metrics.target_counts }}.</p>
+  <table class="metrics">
+    <tr><th>Model</th><th>Accuracy</th><th>Precision (macro)</th><th>Recall (macro)</th><th>F1-macro</th><th>CV F1-macro</th></tr>
+    {% for name, m in risk_metrics.comparison.items() %}
+    <tr{% if name == risk_metrics.winner %} style="background:#dcfce7;font-weight:bold"{% endif %}>
+      <td>{{ name }}</td><td>{{ m.accuracy }}</td><td>{{ m.precision_macro }}</td>
+      <td>{{ m.recall_macro }}</td><td>{{ m.f1_macro }}</td><td>{{ m.cv_f1_macro_mean }} ± {{ m.cv_f1_macro_std }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p>Per-class precision/recall (the honest headline for this imbalanced data):</p>
+  <pre>{{ risk_metrics.classification_report }}</pre>
+  <p>Confusion matrix (rows = true, columns = predicted, labels no / YES):</p>
+  <pre>{{ risk_metrics.confusion_matrix }}</pre>
+  {% if risk_metrics.feature_importances %}
+  <p>Feature importances (winner):</p>
+  <pre>{% for k, v in risk_metrics.feature_importances.items() %}{{ k }}: {{ v }}
+{% endfor %}</pre>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('web.retrain') }}">
+    <button type="submit">Retrain both models</button>
+  </form>
+  {% if retrain_log %}<pre>{{ retrain_log }}</pre>{% endif %}
+</div>
+{% endblock %}

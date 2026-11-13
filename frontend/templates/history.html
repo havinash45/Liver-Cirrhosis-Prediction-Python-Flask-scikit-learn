@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}History — Liver Cirrhosis Prediction{% endblock %}
+{% block content %}
+<div class="container wide">
+  <h2>Clinical Prediction History</h2>
+
+  <div class="db-status-banner">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <div>
+        <strong>Database Engine:</strong>
+        {% if db_status.active_engine == 'mysql' %}
+          <span style="color: #16a34a; font-weight: bold;">MySQL (Connected)</span> &bull; Host: <code>{{ db_status.mysql_host }}:{{ db_status.mysql_port }}</code> &bull; DB: <code>{{ db_status.mysql_database }}</code>
+        {% else %}
+          <span style="color: #d97706; font-weight: bold;">SQLite Fallback Engine</span> &bull; File: <code>{{ db_status.sqlite_path }}</code>
+        {% endif %}
+      </div>
+      <div>
+        <strong>Total Records:</strong> <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 10px;">{{ entries | length }}</span>
+      </div>
+    </div>
+    {% if db_status.active_engine != 'mysql' %}
+      <div style="margin-top: 8px; font-size: 13px; color: #64748b;">
+        <em>Note: MySQL server is currently not reachable on port 3306. Past records are safely retained in the local SQLite fallback. Start your MySQL service and re-run <code>python setup_database.py</code> to connect to MySQL.</em>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if entries %}
+  <table class="metrics">
+    <thead>
+      <tr>
+        <th style="width: 40px;">#</th>
+        <th style="width: 150px;">Date & Time (UTC)</th>
+        <th style="width: 140px;">Patient Name</th>
+        <th style="width: 100px;">Model</th>
+        <th>Prediction Result</th>
+        <th style="width: 100px;">Confidence</th>
+        <th>Clinical Inputs</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td>{{ e.id }}</td>
+        <td>{{ e.created_at }}</td>
+        <td><strong>{{ e.patient_name }}</strong></td>
+        <td>
+          {% if e.model == 'stage' %}
+            <span style="background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Stage (1-4)</span>
+          {% else %}
+            <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Cirrhosis Risk</span>
+          {% endif %}
+        </td>
+        <td><strong>{{ e.result }}</strong></td>
+        <td>
+          {% if e.probability is not none %}
+            {{ (e.probability * 100) | round(1) }}%
+          {% else %}
+            N/A
+          {% endif %}
+        </td>
+        <td style="font-size: 12px; color: #475569; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ e.inputs }}">
+          {{ e.inputs }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div style="background: #f8fafc; border: 1px dashed #cbd5e1; padding: 30px; text-align: center; border-radius: 8px;">
+    <p style="color: #64748b; font-size: 16px;">No predictions logged in the database yet.</p>
+    <a href="{{ url_for('web.predict') }}" style="display: inline-block; background: #2563eb; color: #fff; padding: 8px 18px; border-radius: 5px; text-decoration: none; margin-top: 10px;">Make First Prediction</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

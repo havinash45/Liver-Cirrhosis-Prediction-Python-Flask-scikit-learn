@@ -1,0 +1,157 @@
+{
+  "task": "Cirrhosis risk check (binary YES/no)",
+  "dataset": "HealthCareData.xlsx (Kaggle Indian alcohol/liver data)",
+  "n_rows_total": 950,
+  "n_rows_used": 896,
+  "n_rows_dropped_blank_target": 54,
+  "target_counts": {
+    "YES": 876,
+    "no": 20
+  },
+  "features": [
+    "age",
+    "gender",
+    "alcohol_years",
+    "alcohol_qty",
+    "hepatitis_b",
+    "hepatitis_c",
+    "diabetes",
+    "obesity",
+    "hemoglobin",
+    "platelet_count",
+    "total_bilirubin",
+    "direct_bilirubin",
+    "albumin",
+    "alk_phos",
+    "sgot",
+    "sgpt"
+  ],
+  "test_size": 180,
+  "train_size": 716,
+  "split": "stratified 80/20, random_state=42, 5-fold CV",
+  "imbalance_warning": "Only 2.2% of labelled rows are 'no'. Always-YES scores 97.8% accuracy, so judge this model on per-class precision/recall and F1-macro, never on raw accuracy alone.",
+  "winner": "Random Forest",
+  "winner_selection": "best 5-fold CV F1-macro (more robust than the test set, which holds only 4 'no' rows)",
+  "comparison": {
+    "Logistic Regression": {
+      "accuracy": 0.9278,
+      "precision_macro": 0.6176,
+      "recall_macro": 0.9631,
+      "f1_macro": 0.6713,
+      "cv_f1_macro_mean": 0.6946,
+      "cv_f1_macro_std": 0.0381
+    },
+    "Random Forest": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0,
+      "cv_f1_macro_mean": 1.0,
+      "cv_f1_macro_std": 0.0
+    },
+    "SVM": {
+      "accuracy": 0.9833,
+      "precision_macro": 0.7857,
+      "recall_macro": 0.9915,
+      "f1_macro": 0.8593,
+      "cv_f1_macro_mean": 0.8207,
+      "cv_f1_macro_std": 0.0977
+    },
+    "Naive Bayes": {
+      "accuracy": 0.9167,
+      "precision_macro": 0.6053,
+      "recall_macro": 0.9574,
+      "f1_macro": 0.6517,
+      "cv_f1_macro_mean": 0.6667,
+      "cv_f1_macro_std": 0.0503
+    },
+    "KNN": {
+      "accuracy": 1.0,
+      "precision_macro": 1.0,
+      "recall_macro": 1.0,
+      "f1_macro": 1.0,
+      "cv_f1_macro_mean": 0.8642,
+      "cv_f1_macro_std": 0.1007
+    }
+  },
+  "winner_metrics": {
+    "accuracy": 1.0,
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "cv_f1_macro_mean": 1.0,
+    "cv_f1_macro_std": 0.0
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\n          no     1.0000    1.0000    1.0000         4\n         YES     1.0000    1.0000    1.0000       176\n\n    accuracy                         1.0000       180\n   macro avg     1.0000    1.0000    1.0000       180\nweighted avg     1.0000    1.0000    1.0000       180\n",
+  "confusion_matrix": [
+    [
+      4,
+      0
+    ],
+    [
+      0,
+      176
+    ]
+  ],
+  "confusion_matrix_labels": [
+    "no",
+    "YES"
+  ],
+  "feature_importances": {
+    "total_bilirubin": 0.2875,
+    "direct_bilirubin": 0.1745,
+    "albumin": 0.1257,
+    "alcohol_years": 0.1183,
+    "sgot": 0.083,
+    "platelet_count": 0.0725,
+    "hemoglobin": 0.039,
+    "alk_phos": 0.031,
+    "sgpt": 0.027,
+    "age": 0.0133,
+    "alcohol_qty": 0.0106,
+    "diabetes": 0.0093,
+    "obesity": 0.0075,
+    "hepatitis_c": 0.0004,
+    "hepatitis_b": 0.0002,
+    "gender": 0.0002
+  },
+  "all_features_importance": {
+    "RBC  (million cells/microliter)": 0.2203,
+    "Duration of alcohol consumption(years)": 0.1636,
+    "Direct    (mg/dl)": 0.1622,
+    "Albumin   (g/dl)": 0.1047,
+    "SGOT/AST      (U/L)": 0.0647,
+    "Hemoglobin  (g/dl)": 0.0537,
+    "Polymorphs  (%) ": 0.0452,
+    "Platelet Count  (lakhs/mm)": 0.0395,
+    "Quantity of alcohol consumption (quarters/day)": 0.0298,
+    "SGPT/ALT (U/L)": 0.0237,
+    "Basophils  (%)": 0.0216,
+    "Total Count": 0.0145,
+    "PCV  (%)": 0.0123,
+    "Indirect     (mg/dl)": 0.0096,
+    "AL.Phosphatase      (U/L)": 0.0079,
+    "Globulin  (g/dl)": 0.0076,
+    "Total Protein     (g/dl)": 0.0062,
+    "MCHC  (grams/deciliter)": 0.0059,
+    "TCH": 0.0024,
+    "MCH  (picograms/cell)": 0.0014,
+    "Lymphocytes  (%)": 0.001,
+    "Monocytes   (%)": 0.0007,
+    "Eosinophils   (%)": 0.0007,
+    "MCV   (femtoliters/cell)": 0.0004,
+    "HDL": 0.0004,
+    "Age": 0.0,
+    "TG": 0.0,
+    "LDL": 0.0,
+    "Total Bilirubin    (mg/dl)": 0.0,
+    "A/G Ratio": 0.0
+  },
+  "notes": [
+    "class_weight='balanced' used where supported.",
+    "Curated 16-feature subset; dropped columns are near-duplicates of kept ones (see EDA_SUMMARY.md and all_features_importance).",
+    "RBC was the top-ranked column in the all-features probe but is missing in 552/950 rows (58%), so it was left out; Haemoglobin carries the same red-cell signal.",
+    "Blood pressure column '138/90' is text and was not used.",
+    "HealthCareData.xlsx contains many near-identical rows, so a test row may be a near-copy of a training row: test F1 can look perfect (SVM scored 1.0000 on test) while 5-fold CV is lower.  CV F1-macro is therefore the honest headline and the winner-selection criterion."
+  ]
+}

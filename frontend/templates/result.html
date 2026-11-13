@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Result — Liver Cirrhosis Prediction{% endblock %}
+{% block content %}
+<div class="container wide">
+  <h2>Clinical Prediction Result</h2>
+  <div class="result">
+    {% if result.patient_name and result.patient_name != 'Anonymous Patient' %}
+      <p style="font-size: 16px; color: #475569; margin-bottom: 5px;">Patient: <strong>{{ result.patient_name }}</strong></p>
+    {% endif %}
+
+    {% if kind == "stage" %}
+      <p>
+        {% if result.stage == 1 %}<span class="badge badge-green">Stage 1 — Normal liver</span>
+        {% elif result.stage == 2 %}<span class="badge badge-amber">Stage 2 — Fatty liver</span>
+        {% elif result.stage == 3 %}<span class="badge badge-orange">Stage 3 — Liver fibrosis</span>
+        {% else %}<span class="badge badge-red">Stage 4 — Liver cirrhosis</span>{% endif %}
+      </p>
+      <p style="color:#1e293b; font-size: 16px;">{{ result.label }}</p>
+      {% if result.confidence is not none %}
+      <p style="color:#1e293b">Model confidence: <strong>{{ (result.confidence * 100) | round(1) }}%</strong>
+         (Algorithm: {{ result.model }})</p>
+      {% endif %}
+      {% if result.probabilities %}
+      <p style="color:#1e293b">Multi-class Probabilities:
+        {% for s, p in result.probabilities.items() %}Stage {{ s }}: <strong>{{ (p * 100) | round(1) }}%</strong>{% if not loop.last %} &bull; {% endif %}{% endfor %}
+      </p>
+      {% endif %}
+    {% else %}
+      <p>
+        {% if result.risk == "YES" %}<span class="badge badge-red">YES — At Risk of Liver Cirrhosis</span>
+        {% else %}<span class="badge badge-green">NO — Not At Risk</span>{% endif %}
+      </p>
+      <p style="color:#1e293b; font-size: 16px;">{{ result.label }}</p>
+      {% if result.probability_yes is not none %}
+      <p style="color:#1e293b">Probability of cirrhosis: <strong>{{ (result.probability_yes * 100) | round(1) }}%</strong>
+         (Algorithm: {{ result.model }})</p>
+      {% endif %}
+    {% endif %}
+    <p style="font-size: 13px; color: #16a34a; margin-top: 10px;">&check; Record saved successfully to database.</p>
+  </div>
+
+  <div class="report" id="report" style="display:block">
+    <h3>Official Prediction Report</h3>
+    <ul id="report-content">
+      <li><strong>Patient Name / ID:</strong> {{ result.patient_name }}</li>
+      <li><strong>Date & Time:</strong> <span id="report-date"></span></li>
+      {% if kind == "stage" %}
+      <li><strong>Predicted Diagnosis:</strong> Stage {{ result.stage }} — {{ result.short_label }}</li>
+      {% else %}
+      <li><strong>Predicted Cirrhosis Risk:</strong> {{ result.risk }}</li>
+      {% endif %}
+      <li><strong>Serving Algorithm:</strong> {{ result.model }}</li>
+      {% for k, v in result.inputs.items() %}
+      <li><strong>{{ k.replace('_', ' ').title() }}:</strong> {{ v }}</li>
+      {% endfor %}
+    </ul>
+    <button type="button" onclick="window.print()">Print / Download Clinical Report</button>
+  </div>
+
+  <p style="text-align:center; margin-top: 20px;">
+    <a href="{{ url_for('web.predict') }}">New stage prediction</a> &bull;
+    <a href="{{ url_for('web.risk_check') }}">New risk check</a> &bull;
+    <a href="{{ url_for('web.history') }}">View Database History</a>
+  </p>
+  <p class="hint" style="text-align:center">Clinical decision-support tool only — not a diagnosis. Always consult a licensed medical practitioner.</p>
+</div>
+<script>
+  document.getElementById('report-date').textContent = new Date().toLocaleString();
+</script>
+{% endblock %}

@@ -1,0 +1,8 @@
+# Frontend Requirements & Stack Documentation
+# The frontend uses pure HTML5, Modern CSS3, and Vanilla JavaScript (ES6+),
+# served directly by the Flask server through Jinja2 templates.
+# No heavy Node.js or npm build step is required!
+#
+# If running Flask backend to serve this frontend:
+Flask==3.1.3
+Jinja2>=3.1.0
